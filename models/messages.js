@@ -13,6 +13,10 @@ const Messages = sequelize.define('messages',{
     text: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    active:{
+        type:Sequelize.BOOLEAN,
+        defaultValue: true
     }
 });
 

@@ -12,7 +12,7 @@ exports.create = (req, res, next) => {
     Reminder.create(reminderData)
         .then(result => {
             console.log('reminder criado!');
-            res.send('Reminder criado');
+            res.status(201).json({ message: 'Reminder criado:', reminder: result.dataValues });
         })
         .catch(err => {
             console.log(err);
@@ -27,7 +27,7 @@ exports.findReminders = (req, res, next) => {
         }
     })
         .then(result => {
-            res.json(result);
+            res.status(200).json({ message: 'Reminder Encontrado:', reminder: result.dataValues });
         })
         .catch(err => {
             console.log(err);
@@ -37,7 +37,7 @@ exports.findReminders = (req, res, next) => {
 exports.listAll = (req, res, next) => {
     Reminder.findAll()
         .then(result => {
-            res.json(result);
+            res.status(200).json({ message: 'Reminders Encontrados:', reminder: result.dataValues });
         })
         .catch(err => {
             console.log(err);
@@ -57,7 +57,7 @@ exports.update = (req, res, next) => {
             return result.save();
         })
         .then(result => {
-            res.json(result + " updated");
+            res.status(203).json({ message: 'Reminder atualizado:', reminder: result.dataValues });
         })
         .catch(err => {
             console.log(err);
@@ -73,7 +73,7 @@ exports.delete = (req, res, next) => {
         }
     }, { force: true })
     .then(result => {
-        res.json("Reminder Deletado!");
+        res.status(200).json({ message: 'Reminders deletado!'});
     })
     .catch(err=>{
         console.log(err);
@@ -86,7 +86,7 @@ exports.getOneReminder = (req, res, next) => {
 
 }
     
-exports.testEagerLoad = (req, res, next) =>{
+/* exports.testEagerLoad = (req, res, next) =>{
     const userId = req.body.id;
     
     Reminder.findAll({
@@ -107,4 +107,4 @@ exports.testEagerLoad = (req, res, next) =>{
     .catch(err=>{
         console.log(err);
     });
-}
+} */

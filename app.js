@@ -23,6 +23,7 @@ const Messages = require('./models/messages');
 app.disable('x-powered-by');
 app.use(bodyParser.json());
 
+//CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
@@ -32,9 +33,16 @@ app.use((req, res, next) => {
 
 //Rotas
 app.get('/', function (req, res) {
-
   res.send('Passport initialized');
+});
+app.use('/user', appRoutes);
 
+//error handling
+app.use((error,req,res,next)=>{
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({message: message});
 });
 
 //passport config
@@ -46,18 +54,7 @@ app.use(passport.session()); // persistent login sessions
 require(path.join(__dirname, 'config','passport','passport.js'))(passport); 
 
 
-
-app.use('/user', appRoutes);
-
-//assossiations
-/* Users.hasMany(Reminders,{foreignKey: 'receiver', sourceKey: 'id'});
-//many-to-many onde um usuario tem varios chats e um chat tem varios usuarios
-Users.belongsToMany(Chat, { through: ChatMembers });
-Chat.belongsToMany(Users, { through: ChatMembers });
-//one-to-many onde um chat tem varias mensagens mas uma msg está apenas em um chat.
-Chat.hasMany(Messages);
- */
-
+//sequelize Associations
 Users.hasMany(Reminders, { onDelete: 'CASCADE', foreignKey: 'receiver', sourceKey: 'id' })
 Users.belongsToMany(Chat, { onDelete: 'CASCADE', through: 'ChatMembers' })
 Users.hasMany(Messages, { onDelete: 'CASCADE',foreignKey: 'sender', sourceKey: 'id' })

@@ -29,7 +29,11 @@ module.exports = async (passport) =>{
             }
         }
        } catch (error) {
-           console.log(error);
+        if(!error.statusCode){
+            error.statusCode= 500;
+        }
+        console.log(error);
+        next(error);
        }
 
     }));

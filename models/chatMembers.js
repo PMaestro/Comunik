@@ -8,7 +8,6 @@ const ChatMembers = sequelize.define('chatMembers',{
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
-        
     }
 });
 

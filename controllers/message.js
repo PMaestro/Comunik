@@ -24,11 +24,15 @@ exports.createMessage =  (req, res, next) => {
       
     }).then(chat=>{
         chat.addMessage(msg);
-        res.send(msg);
+        res.status(201).json({message: 'Mensagem enviada com sucesso!', chatMessage: msg.dataValues});
     })
-    .catch(err=>{
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode= 500;
+        }
         console.log(err);
-    })
+        next(err);
+    });
     /* try {
         const messageCreated = await Message.create({ text: textMessage });
         const sender = await User.findByPk(userId);
@@ -48,10 +52,14 @@ exports.listChatMessages =  (req, res, next) => {
         return chatFetched.getMessages();
     })
     .then(result=>{
-        res.json(result);
+        res.status(200).json({message: 'Mensagens encontradas:',chatMessage: result.dataValues});
     })
-    .catch(err=>{
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode= 500;
+        }
         console.log(err);
+        next(err);
     });
 
 }

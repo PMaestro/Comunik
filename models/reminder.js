@@ -23,6 +23,10 @@ const Reminder = sequelize.define('reminder', {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
+    active:{
+        type:Sequelize.BOOLEAN,
+        defaultValue: true
+    }
 
 });
 

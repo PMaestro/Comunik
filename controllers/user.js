@@ -10,11 +10,13 @@ const { validationResult } = require('express-validator');
 
 exports.signup = (req, res, next) => {
   
-    const errors = validationResult(req);
+  /*   const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        const error = new Error('Usuario já existe!');
+        error.statusCode = 422;
+        throw error;
     }
-
+ */
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -36,7 +38,7 @@ exports.signup = (req, res, next) => {
                 })
                     .then(result => {
                         console.log("Usuario Cadastrado!");
-                        res.send('Cadastrado');
+                        res.status(201).send('Cadastrado');
                     })
                     .catch(err => {
                         console.log("erro ao tentar cadastrar no banco de dados!\n" + err);
@@ -50,7 +52,11 @@ exports.signup = (req, res, next) => {
             }
         })
         .catch(err => {
+            if(!err.statusCode){
+                err.statusCode= 500;
+            }
             console.log(err);
+            next(err);
         });
 };
 
@@ -66,13 +72,13 @@ exports.login = (req, res, next) => {
             if (bcrypt.compareSync(password, result.password)) {
                 let token = jwt.sign(result.dataValues, secretKey, { expiresIn: '1h' });
                 result.status = "online"
-                res.send('usuario fez o login!')
+                //res.status(200).send('usuario fez o login!')
                 return (result.save(), token);
             } else {
-                res.send("Usuario nao existe!");
+                res.status(422).send("Usuario nao existe!");
             }
         }).then((userSavedResult, token) => {
-            res.json({ token: token });
+            res.status(200).json({ token: token });
         })
         .catch(err => {
             res.send(`send error ${err}`);

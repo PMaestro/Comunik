@@ -49,7 +49,7 @@ routes.post('/reminder/update', ReminderController.update);
 
 routes.post('/reminder/delete', ReminderController.delete);
 
-routes.get('/testeLoad', ReminderController.testEagerLoad);
+//routes.get('/testeLoad', ReminderController.testEagerLoad);
 
 //chats methods
 
@@ -61,9 +61,9 @@ routes.get('/listUserChat/:id', ChatController.listUserChat);
 
 routes.post('/updateChat', ChatController.updateChat);
 
-routes.get('/ListAllChatsTest', ChatController.ListAllChatsTest);
+routes.get('/ListAllChats', ChatController.ListAllChats);
 
-routes.post('/createChatsTest', ChatController.createChatTest);
+//routes.post('/createChatsTest', ChatController.createChatTest);
 
 //mesage methods
 routes.post('/sendMessage',MessageController.createMessage);

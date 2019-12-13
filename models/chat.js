@@ -12,6 +12,10 @@ const Chat = sequelize.define('chat', {
     title:{
         type: Sequelize.STRING,
         allowNull: true,
+    },
+    active:{
+        type:Sequelize.BOOLEAN,
+        defaultValue: true
     }
 });
 
