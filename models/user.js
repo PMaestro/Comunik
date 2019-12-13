@@ -16,6 +16,9 @@ const User = sequelize.define('user', {
         allowNull: false,
         validate: {
             isEmail: true
+        },unique: {
+            args: true,
+            msg: 'Email address already in use!'
         }
     },
     password: { 
@@ -23,9 +26,9 @@ const User = sequelize.define('user', {
         allowNull: false
     },
     status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
         allowNull: false,
-        default: 'offline'
+        values: ['offline', 'online', 'busy','away']
     }
 });
 

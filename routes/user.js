@@ -3,18 +3,33 @@ const userController = require('../controllers/user');
 const ReminderController = require('../controllers/reminder');
 const ChatController = require('../controllers/chat');
 const { body } = require('express-validator');
+const passport = require('passport');
 
 const routes = express.Router();
 
+function checkUserSession(req, res, next) {
+    if (!req.user) res.redirect("/users/login");
+    else next();
+  }
+
 //user methods
-routes.post('/signup', userController.signup)
+routes.post('/signup', userController.signup);
+
+/* routes.post('/login', [
+    body('name').not().isEmpty(),
+    body('email')
+        .isEmail()
+        .normalizeEmail(),
+    body('password').isLength({ min: 6 })
+], userController.login); */
+
 routes.post('/login', [
     body('name').not().isEmpty(),
     body('email')
         .isEmail()
         .normalizeEmail(),
     body('password').isLength({ min: 6 })
-], userController.login);
+], passport.authenticate('local',{ failureRedirect: '/' }));
 
 routes.get('/online', userController.listOnline);
 
