@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('../controllers/user');
 const ReminderController = require('../controllers/reminder');
 const ChatController = require('../controllers/chat');
+const MessageController = require('../controllers/message');
 const { body } = require('express-validator');
 const passport = require('passport');
 
@@ -64,6 +65,7 @@ routes.get('/ListAllChatsTest', ChatController.ListAllChatsTest);
 
 routes.post('/createChatsTest', ChatController.createChatTest);
 
-
+//mesage methods
+routes.post('/sendMessage',MessageController.createMessage);
 
 module.exports = routes;

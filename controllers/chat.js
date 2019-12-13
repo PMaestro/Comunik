@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 
 exports.createChat = async (req, res, next) => {
     const usersId = req.body.id;
+  try {
     const chat = await Chat.findAll({
         include: [{
             model: User,
@@ -22,6 +23,9 @@ exports.createChat = async (req, res, next) => {
     } else {
         res.send(chat);
     }
+  } catch (error) {
+      console.log(error);
+  }
 
 }
 

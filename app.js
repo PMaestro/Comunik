@@ -1,13 +1,14 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 1337;
-const userRoutes = require('./routes/user');
+const appRoutes = require('./routes/routes');
 const sequelize = require('./util/database');
 const passport = require('passport');
 var cookieParser = require('cookie-parser')
 const session = require('express-session');
 const flash = require('connect-flash');
+const PORT = process.env.PORT || 1337;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'arnold schwarzenegger';
 //initialize app.
 const app = express();
 
@@ -37,7 +38,7 @@ app.get('/', function (req, res) {
 });
 
 //passport config
-app.use(session({ secret: 'arnold schwarzenegger', resave: true, saveUninitialized: true })); // session secret
+app.use(session({ secret: SESSION_SECRET, resave: true, saveUninitialized: true })); // session secret
 app.use(cookieParser());
 app.use(flash());
 app.use(passport.initialize());
@@ -46,7 +47,7 @@ require(path.join(__dirname, 'config','passport','passport.js'))(passport);
 
 
 
-app.use('/user', userRoutes);
+app.use('/user', appRoutes);
 
 //assossiations
 /* Users.hasMany(Reminders,{foreignKey: 'receiver', sourceKey: 'id'});
@@ -59,12 +60,12 @@ Chat.hasMany(Messages);
 
 Users.hasMany(Reminders, { onDelete: 'CASCADE', foreignKey: 'receiver', sourceKey: 'id' })
 Users.belongsToMany(Chat, { onDelete: 'CASCADE', through: 'ChatMembers' })
-Users.hasMany(Messages, { onDelete: 'CASCADE' })
+Users.hasMany(Messages, { onDelete: 'CASCADE',foreignKey: 'sender', sourceKey: 'id' })
 
 Reminders.belongsTo(Users, { onDelete: 'CASCADE', foreignKey: 'receiver', sourceKey: 'id' });
 
 Messages.belongsTo(Chat, { onDelete: 'CASCADE' })
-Messages.belongsTo(Users, { onDelete: 'CASCADE' })
+Messages.belongsTo(Users, { onDelete: 'CASCADE', foreignKey: 'sender', sourceKey: 'id' })
 
 Chat.belongsToMany(Users, { onDelete: 'CASCADE', through: 'ChatMembers' })
 Chat.hasMany(Messages, { onDelete: 'CASCADE' })
@@ -72,7 +73,7 @@ Chat.hasMany(Messages, { onDelete: 'CASCADE' })
 //iniciando a conexao com o banco e o servidor
 sequelize
   // .authenticate()
-  .sync({ force: true })
+  .sync(/* { force: true } */)
   .then(() => {
     console.log('Connection has been established successfully.');
     app.listen(PORT);
